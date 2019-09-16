@@ -1,4 +1,4 @@
-FROM bde2020/hadoop-base:2.0.0-hadoop-3.1.1-java8-adt
+FROM adityap174/poc:hadoop-base-2.0.0-hadoop-3.1.1-java8
 
 MAINTAINER Ivan Ermilov <ivan.s.ermilov@gmail.com>
 

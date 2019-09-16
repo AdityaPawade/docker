@@ -1,8 +1,8 @@
-version: "3"
+version: "3.5"
 
 services:
   namenode:
-    image: bde2020/hadoop-namenode:2.0.0-hadoop-3.1.1-java8-adt
+    image: adityap174/poc:hadoop-namenode-2.0.0-hadoop-3.1.1-java8
     container_name: namenode
     hostname: namenode
     ports:
@@ -13,9 +13,11 @@ services:
       - CLUSTER_NAME=test
     env_file:
       - ./hadoop.env
+    networks:
+      - hadoop-poc-env
 
   datanode:
-    image: bde2020/hadoop-datanode:2.0.0-hadoop-3.1.1-java8-adt
+    image: adityap174/poc:hadoop-datanode-2.0.0-hadoop-3.1.1-java8
     container_name: datanode
     hostname: datanode
     ports:
@@ -26,9 +28,11 @@ services:
       SERVICE_PRECONDITION: "namenode:9870"
     env_file:
       - ./hadoop.env
+    networks:
+      - hadoop-poc-env
   
   resourcemanager:
-    image: bde2020/hadoop-resourcemanager:2.0.0-hadoop-3.1.1-java8-adt
+    image: adityap174/poc:hadoop-resourcemanager-2.0.0-hadoop-3.1.1-java8
     container_name: resourcemanager
     hostname: resourcemanager
     ports:
@@ -37,9 +41,11 @@ services:
       SERVICE_PRECONDITION: "namenode:9870 datanode:9864"
     env_file:
       - ./hadoop.env
+    networks:
+      - hadoop-poc-env
 
   nodemanager1:
-    image: bde2020/hadoop-nodemanager:2.0.0-hadoop-3.1.1-java8-adt
+    image: adityap174/poc:hadoop-nodemanager-2.0.0-hadoop-3.1.1-java8
     container_name: nodemanager
     hostname: nodemanager
     ports:
@@ -48,9 +54,11 @@ services:
       SERVICE_PRECONDITION: "namenode:9870 datanode:9864 resourcemanager:8088"
     env_file:
       - ./hadoop.env
+    networks:
+      - hadoop-poc-env
   
   historyserver:
-    image: bde2020/hadoop-historyserver:2.0.0-hadoop-3.1.1-java8-adt
+    image: adityap174/poc:hadoop-historyserver-2.0.0-hadoop-3.1.1-java8
     container_name: historyserver
     hostname: historyserver
     ports:
@@ -61,8 +69,17 @@ services:
       - hadoop_historyserver:/hadoop/yarn/timeline
     env_file:
       - ./hadoop.env
+    networks:
+      - hadoop-poc-env
   
 volumes:
   hadoop_namenode:
   hadoop_datanode:
   hadoop_historyserver:
+
+networks:
+  hadoop-poc-env:
+   name: hadoop-poc-network
+
+
+
