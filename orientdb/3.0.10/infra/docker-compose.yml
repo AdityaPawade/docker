@@ -1,0 +1,17 @@
+version: '3'
+services:
+
+  orientdb1:
+    build: orientdb/
+    ports:
+      - 2424:2424
+      - 2480:2480
+      - 2434:2434
+    command: ["dserver.sh"]
+  orientdb2:
+    build: orientdb/
+    ports:
+      - 2425:2424
+      - 2481:2480
+      - 2435:2434
+    command: ["dserver.sh"]

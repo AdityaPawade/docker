@@ -1,0 +1,31 @@
+version: '3.2'
+services:
+
+  debian:
+    build:
+      context: debian/${OS_VERSION}
+      dockerfile: Dockerfile
+    image: orient/debian:${OS_VERSION}
+
+  java:
+    build:
+      context: java/${JAVA_VERSION}/${OS_VERSION}
+      dockerfile: Dockerfile
+    image: orient/java:${JAVA_VERSION}-${OS_VERSION}
+    depends_on:
+      - debian
+
+  #orientdb:
+    #build: orientdb/
+    #hostname: orientdb
+    #restart: always
+    #ports:
+      #- 2424:2424
+     # - 2480:2480
+    #volumes:
+     # - '/Users/prashant.s/orientdb/backup'
+     # - '/Users/prashant.s/orientdb/databases'
+     # - '/Users/prashant.s/orientdb/config'
+    #command: [ "server.sh"]
+    #depends_on:
+      #- java
