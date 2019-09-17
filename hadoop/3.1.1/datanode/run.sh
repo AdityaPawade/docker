@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 
 datadir=`echo $HDFS_CONF_dfs_datanode_data_dir | perl -pe 's#file://##'`
 if [ ! -d $datadir ]; then
@@ -6,4 +7,4 @@ if [ ! -d $datadir ]; then
   exit 2
 fi
 
-$HADOOP_PREFIX/bin/hdfs --config $HADOOP_CONF_DIR datanode
+$HADOOP_HOME/bin/hdfs --config $HADOOP_CONF_DIR datanode

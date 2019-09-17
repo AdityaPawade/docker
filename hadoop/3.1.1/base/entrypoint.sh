@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 
 # Set some sensible defaults
 export CORE_CONF_fs_defaultFS=${CORE_CONF_fs_defaultFS:-hdfs://`hostname -f`:8020}

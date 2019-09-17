@@ -1,3 +1,4 @@
 #!/bin/bash
+set -x
 
-$HADOOP_PREFIX/bin/yarn --config $HADOOP_CONF_DIR nodemanager
+$HADOOP_HOME/bin/yarn --config $HADOOP_CONF_DIR nodemanager
