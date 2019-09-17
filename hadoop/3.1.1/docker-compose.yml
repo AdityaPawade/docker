@@ -2,7 +2,7 @@ version: "3.5"
 
 services:
   namenode:
-    image: adityap174/poc:hadoop-namenode-2.0.0-hadoop-3.1.1-java8
+    image: adityap174/poc:hadoop-namenode-2.0.1-hadoop-3.1.1-java8
     container_name: namenode
     hostname: namenode
     ports:
@@ -17,7 +17,7 @@ services:
       - hadoop-poc-env
 
   datanode:
-    image: adityap174/poc:hadoop-datanode-2.0.0-hadoop-3.1.1-java8
+    image: adityap174/poc:hadoop-datanode-2.0.1-hadoop-3.1.1-java8
     container_name: datanode
     hostname: datanode
     ports:
@@ -32,7 +32,7 @@ services:
       - hadoop-poc-env
   
   resourcemanager:
-    image: adityap174/poc:hadoop-resourcemanager-2.0.0-hadoop-3.1.1-java8
+    image: adityap174/poc:hadoop-resourcemanager-2.0.1-hadoop-3.1.1-java8
     container_name: resourcemanager
     hostname: resourcemanager
     ports:
@@ -45,7 +45,7 @@ services:
       - hadoop-poc-env
 
   nodemanager1:
-    image: adityap174/poc:hadoop-nodemanager-2.0.0-hadoop-3.1.1-java8
+    image: adityap174/poc:hadoop-nodemanager-2.0.1-hadoop-3.1.1-java8
     container_name: nodemanager
     hostname: nodemanager
     ports:
@@ -58,7 +58,7 @@ services:
       - hadoop-poc-env
   
   historyserver:
-    image: adityap174/poc:hadoop-historyserver-2.0.0-hadoop-3.1.1-java8
+    image: adityap174/poc:hadoop-historyserver-2.0.1-hadoop-3.1.1-java8
     container_name: historyserver
     hostname: historyserver
     ports:
