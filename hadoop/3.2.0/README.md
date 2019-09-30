@@ -2,7 +2,7 @@
 
 # Changes
 
-Version 2.0.0 introduces uses wait_for_it script for the cluster startup
+Version 2.0.4 introduces uses wait_for_it script for the cluster startup
 
 # Hadoop Docker
 

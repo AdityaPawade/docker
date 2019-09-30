@@ -1,4 +1,4 @@
-FROM adityap174/poc:hadoop-base-2.0.1-hadoop-3.1.1-java8
+FROM adityap174/poc:hadoop-base-2.0.4-hadoop-3.2.0-java8
 
 MAINTAINER Ivan Ermilov <ivan.s.ermilov@gmail.com>
 

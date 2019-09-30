@@ -4,7 +4,7 @@ set -x
 # Set some sensible defaults
 export CORE_CONF_fs_defaultFS=${CORE_CONF_fs_defaultFS:-hdfs://`hostname -f`:8020}
 
-function addProperty() {
+function addXmlProperty() {
   local path=$1
   local name=$2
   local value=$3
@@ -14,50 +14,75 @@ function addProperty() {
   sed -i "/<\/configuration>/ s/.*/${escapedEntry}\n&/" $path
 }
 
-function configure() {
+function configureXml() {
     local path=$1
-    local module=$2
-    local envPrefix=$3
+    local envPrefix=$2
 
     local var
     local value
     
-    echo "Configuring $module"
-    for c in `printenv | perl -sne 'print "$1 " if m/^${envPrefix}_(.+?)=.*/' -- -envPrefix=$envPrefix`; do 
+    echo "Configuring $path"
+    for c in `printenv | perl -sne 'print "$1 " if m/^${envPrefix}_(.+?)=.*/' -- -envPrefix=$envPrefix`; do
         name=`echo ${c} | perl -pe 's/___/-/g; s/__/@/g; s/_/./g; s/@/_/g;'`
         var="${envPrefix}_${c}"
         value=${!var}
         echo " - Setting $name=$value"
-        addProperty /etc/hadoop/$module-site.xml $name "$value"
+        addXmlProperty $path $name "$value"
     done
 }
 
-configure /etc/hadoop/core-site.xml core CORE_CONF
-configure /etc/hadoop/hdfs-site.xml hdfs HDFS_CONF
-configure /etc/hadoop/yarn-site.xml yarn YARN_CONF
-configure /etc/hadoop/httpfs-site.xml httpfs HTTPFS_CONF
-configure /etc/hadoop/kms-site.xml kms KMS_CONF
-configure /etc/hadoop/mapred-site.xml mapred MAPRED_CONF
+function addProperty() {
+  local path=$1
+  local value=$2
+
+  echo $value >> $path
+}
+
+function configure() {
+    local path=$1
+    local envPrefix=$2
+
+    local value
+
+    echo "Configuring $path"
+
+    for value in `printenv`; do
+        if [[ $value == $envPrefix* ]]
+        then
+            local propertyValue=${value/"${envPrefix}_"}
+            echo " - Setting $propertyValue"
+            addProperty $path $propertyValue
+        fi
+    done
+}
+
+configureXml /etc/hadoop/core-site.xml CORE_CONF
+configureXml /etc/hadoop/hdfs-site.xml HDFS_CONF
+configureXml /etc/hadoop/yarn-site.xml YARN_CONF
+configureXml /etc/hadoop/httpfs-site.xml HTTPFS_CONF
+configureXml /etc/hadoop/kms-site.xml KMS_CONF
+configureXml /etc/hadoop/mapred-site.xml MAPRED_CONF
+configure /etc/hadoop/container-executor.cfg CONTAINEREXEC_CONF
 
 if [ "$MULTIHOMED_NETWORK" = "1" ]; then
     echo "Configuring for multihomed network"
 
     # HDFS
-    addProperty /etc/hadoop/hdfs-site.xml dfs.namenode.rpc-bind-host 0.0.0.0
-    addProperty /etc/hadoop/hdfs-site.xml dfs.namenode.servicerpc-bind-host 0.0.0.0
-    addProperty /etc/hadoop/hdfs-site.xml dfs.namenode.http-bind-host 0.0.0.0
-    addProperty /etc/hadoop/hdfs-site.xml dfs.namenode.https-bind-host 0.0.0.0
-    addProperty /etc/hadoop/hdfs-site.xml dfs.client.use.datanode.hostname true
-    addProperty /etc/hadoop/hdfs-site.xml dfs.datanode.use.datanode.hostname true
+    addXmlProperty /etc/hadoop/hdfs-site.xml dfs.namenode.rpc-bind-host 0.0.0.0
+    addXmlProperty /etc/hadoop/hdfs-site.xml dfs.namenode.servicerpc-bind-host 0.0.0.0
+    addXmlProperty /etc/hadoop/hdfs-site.xml dfs.namenode.http-bind-host 0.0.0.0
+    addXmlProperty /etc/hadoop/hdfs-site.xml dfs.namenode.https-bind-host 0.0.0.0
+    addXmlProperty /etc/hadoop/hdfs-site.xml dfs.client.use.datanode.hostname true
+    addXmlProperty /etc/hadoop/hdfs-site.xml dfs.datanode.use.datanode.hostname true
 
     # YARN
-    addProperty /etc/hadoop/yarn-site.xml yarn.resourcemanager.bind-host 0.0.0.0
-    addProperty /etc/hadoop/yarn-site.xml yarn.nodemanager.bind-host 0.0.0.0
-    addProperty /etc/hadoop/yarn-site.xml yarn.nodemanager.bind-host 0.0.0.0
-    addProperty /etc/hadoop/yarn-site.xml yarn.timeline-service.bind-host 0.0.0.0
+    addXmlProperty /etc/hadoop/yarn-site.xml yarn.resourcemanager.bind-host 0.0.0.0
+    addXmlProperty /etc/hadoop/yarn-site.xml yarn.nodemanager.bind-host 0.0.0.0
+    addXmlProperty /etc/hadoop/yarn-site.xml yarn.nodemanager.bind-host 0.0.0.0
+    addXmlProperty /etc/hadoop/yarn-site.xml yarn.timeline-service.bind-host 0.0.0.0
 
     # MAPRED
-    addProperty /etc/hadoop/mapred-site.xml yarn.nodemanager.bind-host 0.0.0.0
+    addXmlProperty /etc/hadoop/mapred-site.xml yarn.nodemanager.bind-host 0.0.0.0
 fi
 
 if [ -n "$GANGLIA_HOST" ]; then
